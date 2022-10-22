@@ -1,7 +1,8 @@
-#include <SoftwareSerial.h>  // libreria que permite establecer pines digitales
-        // para comunicacion serie
+#include <SoftwareSerial.h>  // libreria que permite establecer pines digitales para comunicacion serie
+#include <Servo.h> // libreria para controlar el servo 
 
 SoftwareSerial miBT(10, 11);  // pin 10 como RX, pin 11 como TX
+Servo servoMotor;
 
 char DATO = 0;      // variable para almacenar caracter recibido
 //int VELOCIDAD = 0;
@@ -11,6 +12,10 @@ int IN3 = 4;
 int IN4 = 7;
 int ENA1 = 5;
 int ENA2 = 6;
+int TRIG = 8;      // trigger en pin 8
+int ECO = 12;      // echo en pin 12
+int DURACION;
+int DISTANCIA;
 
 
 void setup(){
@@ -21,13 +26,35 @@ void setup(){
   pinMode(IN3,OUTPUT);
   pinMode(IN4,OUTPUT);
   pinMode(ENA2,OUTPUT);
-  Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);  // trigger como salida
+  pinMode(ECO, INPUT);    // echo como entrada
+  Serial.begin(9600);     // inicializacion de comunicacion serial a 9600 bps
+    // Iniciamos el servo para que empiece a trabajar con el pin 9
+  servoMotor.attach(9);
 }
 
 void loop(){ // Es posible enviar una senal continua y asignarla como valor pwm por lo tanto seria viable controlar por bluethoot los 4 motores
+  
+  //control del sensor ultrasonico
+  digitalWrite(TRIG, HIGH);     // generacion del pulso a enviar
+  delay(1);       // al pin conectado al trigger
+  digitalWrite(TRIG, LOW);    // del sensor
+  
+  DURACION = pulseIn(ECO, HIGH);  // con funcion pulseIn se espera un pulso
+            // alto en Echo
+  DISTANCIA = DURACION / 58.2;    // distancia medida en centimetros
+  Serial.println(DISTANCIA);    // envio de valor de distancia por monitor serial
+
+  //control del servomotor
+  delay(200);       // demora entre datos
+  servoMotor.write(45);
+  delay(1000);   // Esperamos 1 segundo
+  servoMotor.write(135); 
+  delay(1000);  // Esperamos 1 segundo 
+  
+//Control por medio de bluethoot de los motores
 if (miBT.available()){      // si hay informacion disponible desde modulo
   DATO = miBT.read();// almacena en DATO el caracter recibido desde modulo
-  Serial.write("DATO");
 if (DATO == '8'){// adelante
     analogWrite(ENA1,0);
     analogWrite(ENA2,0);
@@ -74,9 +101,6 @@ if (DATO == '6'){//derecha
     digitalWrite(IN2,LOW);  
     digitalWrite(IN3,HIGH);
     digitalWrite(IN4,LOW);
-      }
-  /*default:
-    analogWrite(ENA1,0);
-    analogWrite(ENA2,0);*/    
+      }   
     }
   }

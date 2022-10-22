@@ -6,8 +6,7 @@
 Servo servoMotor;
 
 int TRIG = 10;      // trigger en pin 10
-int ECO = 9;      // echo en pin 9
-int LED = 3;      // LED en pin 3
+int ECO = 12;      // echo en pin 12
 int DURACION;
 int DISTANCIA;
 
@@ -15,7 +14,6 @@ void setup()
 {
   pinMode(TRIG, OUTPUT);  // trigger como salida
   pinMode(ECO, INPUT);    // echo como entrada
-  pinMode(LED, OUTPUT);   // LED como salida
   Serial.begin(9600);     // inicializacion de comunicacion serial a 9600 bps
   
   // Iniciamos el servo para que empiece a trabajar con el pin 9
@@ -24,7 +22,7 @@ void setup()
 
 void loop()
 {
-  
+  //control del sensor ultrasonico
   digitalWrite(TRIG, HIGH);     // generacion del pulso a enviar
   delay(1);       // al pin conectado al trigger
   digitalWrite(TRIG, LOW);    // del sensor
@@ -33,23 +31,11 @@ void loop()
             // alto en Echo
   DISTANCIA = DURACION / 58.2;    // distancia medida en centimetros
   Serial.println(DISTANCIA);    // envio de valor de distancia por monitor serial
+
+  //control del servomotor
   delay(200);       // demora entre datos
-  if (DISTANCIA < 20 and DISTANCIA > 0) digitalWrite(LED,HIGH);
-  else digitalWrite(LED,LOW);
-  
-  // Desplazamos a la posición 10
-  servoMotor.write(10); //Se pone 10 debido a que al llegar al maximo de 180 el servo comienza a trabarse
-  // Esperamos 1 segundo
-  delay(1000);
-  
-  // Desplazamos a la posición 90
-  servoMotor.write(90);
-  // Esperamos 1 segundo
-  delay(1000);
-  
-  // Desplazamos a la posición 170
-  servoMotor.write(170); //Se pone 170 debido a que al llegar al maximo de 180 el servo comienza a trabarse
-  // Esperamos 1 segundo
-  delay(1000);
-   
+  servoMotor.write(45);
+  delay(1000);   // Esperamos 1 segundo
+  servoMotor.write(135); 
+  delay(1000);  // Esperamos 1 segundo   
 }
