@@ -234,5 +234,4 @@ void loop() {
       } while (miBT.available() <= 0);  // la condicion de salida del bucle do es que halla llegado infromacion al receptor bluethoot
     }
   }
-  //servoMotor.write(110);              // se mueve el servo a su posicion centrada
 }
