@@ -8,7 +8,7 @@ Servo servoMotor;             // creamos un objeto servoMotor, que sera el servo
 NewPing sonar(8, 12);         // creamos el objeto sonar, para controlar el modulo de ultrasonido 8 Trig 12 Echo
 
 char DATO = 0;  // variable para almacenar caracter recibido
-int IN1 = 7;    // Los pines  a 7 son utulizados por el modulo L298 encargado del control de motores
+int IN1 = 7;    // Los pines 2 a 7 son utulizados por el modulo L298 encargado del control de motores
 int IN2 = 4;
 int IN3 = 3;
 int IN4 = 2;
